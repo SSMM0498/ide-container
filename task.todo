@@ -1,10 +1,10 @@
 +   [x] get dependencies
 +   [x] define env variable
 +   [x] create dockerfile
-+   [ ] init connexion
-+   [ ] crud
-    +   [ ] crud types
-    +   [ ] crud functions
++   [x] init connexion
++   [x] crud
+    +   [x] crud types
+    +   [x] crud functions
     +   [ ] handle errors
 +   [ ] watch
 +   [ ] terminal

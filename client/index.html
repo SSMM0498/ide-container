@@ -1,0 +1,45 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+    <button>Send hello</button>
+    <script type="module">
+        import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
+        const socket = io('http://localhost:1234');
+        socket.on('connect', function () {
+            console.log('Connected');
+            socket.emit('init');
+            socket.emit('crud-delete-folder', {
+                targetPath: "/home/arkad/code/go"
+            });
+//             socket.emit('crud-update-file', {
+//                 targetPath: "/home/arkad/code/go/main.go",
+//                 fileContent: `package main
+
+// import "fmt"
+
+// func main() {
+// 	fmt.Println("Hello World!")
+// }
+// `
+//             });
+        });
+        // socket.on('events-to-client', function (data) {
+        //     console.log('🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩');
+        // });
+        socket.on('read-file', function (data) {
+            console.log('file content', data);
+        });
+        socket.on('read-folder', function (data) {
+            console.log('folder content', data);
+        });
+        // socket.on('disconnect', function () {
+        //     console.log('Disconnected');
+        // });
+    </script>
+</body>
+
+</html>

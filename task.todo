@@ -1,6 +1,6 @@
 +   [x] get dependencies
-+   [ ] define env variable
-+   [ ] create dockerfile
++   [x] define env variable
++   [x] create dockerfile
 +   [ ] init connexion
 +   [ ] crud
     +   [ ] crud types

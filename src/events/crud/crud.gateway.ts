@@ -31,8 +31,7 @@ export class CRUDGateway {
         this.crudService.deleteResource(eventData);
     }
 
-    @SubscribeMessage('crud-move-file')
-    @SubscribeMessage('crud-move-folder')
+    @SubscribeMessage('crud-move-resource')
     async onMoveResource(@MessageBody() eventData: MoveEventType) {
         console.log('MOVE RESOURCE - CRUD DATA : ' + eventData);
         this.crudService.moveResource(eventData);

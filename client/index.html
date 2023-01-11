@@ -34,6 +34,12 @@
                         // });
 
             socket.emit('watch-start');
+            socket.emit('terminal-input', 'ls');
+
+            socket.emit('terminal');
+            socket.on('terminal-data', function (data) {
+                console.log('terminal-data', data);
+            });
 
             socket.on('read-file', function (data) {
                 console.log('file content', data);

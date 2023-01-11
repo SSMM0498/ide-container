@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { WatchController } from './watch.controller';
+import { TerminalGateway } from './terminal.gateway';
 
 @Module({
     imports: [ConfigModule],
-    controllers: [WatchController]
+    providers: [TerminalGateway]
 })
-export class WatchModule { }
+export class TermModule { }

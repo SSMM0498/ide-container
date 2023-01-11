@@ -20,8 +20,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "dev:buildDocker": "docker build -t ide-container . && docker rm -f $(docker ps -aq)",
-    "dev:startDocker": "docker run -p 1234:1234 -p 1337:1337 -p 1338:1338 --env-file .env ide-container"
+    "build:Docker": "docker build -t ide-container . && docker rm -f $(docker ps -aq)",
+    "start:Docker": "docker run -p 1234:1234 -p 1337:1337 -p 1338:1338 --env-file .env ide-container"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",

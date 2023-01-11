@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { EventsGateway } from './events.gateway';
+import { CRUDGateway } from './crud.gateway';
 import { CRUDService } from './crud.service';
 import { CRUDHandler } from 'src/handlers/crudHandler';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
     imports: [ConfigModule],
-    providers: [EventsGateway, CRUDService, CRUDHandler],
+    providers: [CRUDGateway, CRUDService, CRUDHandler],
 })
-export class EventsModule { }
+export class CRUDModule { }

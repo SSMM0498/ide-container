@@ -2,5 +2,8 @@ node_modules
 __generated__
 .vscode
 build
+client
+dist
+code
 scripts
 test

@@ -14,7 +14,7 @@ import { CreateFileEventType, CreateFolderEventType, DeleteEventType, DirectoryT
         origin: '*',
     },
 })
-export class EventsGateway {
+export class CRUDGateway {
     constructor(private crudService: CRUDService) { }
 
     @WebSocketServer()

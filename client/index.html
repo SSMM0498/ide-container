@@ -11,34 +11,47 @@
         const socket = io('http://localhost:1234');
         socket.on('connect', function () {
             console.log('Connected');
-            socket.emit('init');
-            socket.emit('crud-delete-folder', {
-                targetPath: "/home/arkad/code/go"
+                        socket.emit('init');
+                        // socket.emit('crud-create-folder', {
+                        //     targetPath: "C:/Users/barsa/Documents/Coding/Learn/IDE\ -\ Proto/fileexp/ide-container/code/go"
+                        // });
+            //             socket.emit('crud-create-file', {
+            //                 targetPath: "/home/arkad/code/go/main.go"
+            //             });
+            //             socket.emit('crud-update-file', {
+            //                 targetPath: "/home/arkad/code/go/main.go",
+            //                 fileContent: `package main
+
+            // import "fmt"
+
+            // func main() {
+            // 	fmt.Println("Hello World!")
+            // }
+            // `
+            //             });
+                        // socket.emit('crud-read-file', {
+                        //     targetPath: "/home/arkad/code/go/main.go"
+                        // });
+
+            socket.emit('watch-start');
+
+            socket.on('read-file', function (data) {
+                console.log('file content', data);
             });
-//             socket.emit('crud-update-file', {
-//                 targetPath: "/home/arkad/code/go/main.go",
-//                 fileContent: `package main
 
-// import "fmt"
+            socket.on('read-folder', function (data) {
+                console.log('folder content', data);
+            });
+        });
 
-// func main() {
-// 	fmt.Println("Hello World!")
-// }
-// `
-//             });
-        });
-        // socket.on('events-to-client', function (data) {
-        //     console.log('🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩');
-        // });
-        socket.on('read-file', function (data) {
-            console.log('file content', data);
-        });
-        socket.on('read-folder', function (data) {
-            console.log('folder content', data);
-        });
-        // socket.on('disconnect', function () {
-        //     console.log('Disconnected');
-        // });
+        const eventSource = new EventSource('http://127.0.0.1:1234/api/watch');
+        console.log(eventSource);
+        eventSource.onmessage = ({ data }) => {
+            console.log(data);
+            const message = document.createElement('li');
+            message.innerText = 'New message: ' + JSON.stringify(data);
+            document.body.appendChild(message);
+        }
     </script>
 </body>
 

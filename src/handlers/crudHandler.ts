@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ChildProcessWithoutNullStreams, spawn as spawnChildProcess } from "child_process"
 import * as directoryTree from "directory-tree";
 import { readFileSync, writeFileSync } from "fs";
-import { DirectoryTreeType } from "src/events/types";
+import { DirectoryTreeType } from "src/events/crud/types";
 
 @Injectable()
 export class CRUDHandler {

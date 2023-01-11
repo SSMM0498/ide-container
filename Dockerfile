@@ -15,16 +15,16 @@ RUN apt-get install -y nodejs
 # Install live-server and yarn
 RUN npm install -g live-server yarn
 
-# Copy package.json and its lockfile to /root/arkad
-COPY package.json package-lock.json /root/arkad/
+# Copy package.json and its lockfile to /home/arkad
+COPY package.json package-lock.json /home/arkad/
 
-WORKDIR /root/arkad
+WORKDIR /home/arkad
 
 # Install Dependencies
 RUN npm install
 
-# Copy source code to /root/arkad
-COPY . /root/arkad
+# Copy source code to /home/arkad
+COPY . /home/arkad
 
 # Compile Typescript to Javascript
 RUN npm run build
@@ -39,12 +39,12 @@ EXPOSE 1234 1337 1338
 RUN adduser arkad
 
 # Store uid and gid of created user to use while creating pty
-RUN id -u arkad > /root/arkad/.uid
-RUN id -g arkad > /root/arkad/.gid
+RUN id -u arkad > /home/arkad/.uid
+RUN id -g arkad > /home/arkad/.gid
 RUN mkdir code
 
 # Use chokidar polling to avoid reaching the system limits for file watchers
-# ENV CHOKIDAR_USEPOLLING=1
+ENV CHOKIDAR_USEPOLLING=1
 
 # Start server
 CMD npm start

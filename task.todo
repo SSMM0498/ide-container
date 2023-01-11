@@ -6,5 +6,5 @@
     +   [x] crud types
     +   [x] crud functions
     +   [ ] handle errors
-+   [ ] watch
++   [x] watch
 +   [ ] terminal

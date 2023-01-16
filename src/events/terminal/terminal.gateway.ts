@@ -9,7 +9,11 @@ import { ConfigService } from '@nestjs/config';
 import ConfigParser from 'configparser';
 import { bright, red, reset, BgWhite, green, blue, arkadLogo, LS_COLORS } from 'src/constants';
 
-@WebSocketGateway()
+@WebSocketGateway({
+    cors: {
+        origin: '*',
+    },
+})
 export class TerminalGateway {
     private terminalProcess: IPty
     private hostname: string;

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { WatchController } from './watch.controller';
+import { WatchGateway } from './watch.gateway';
 
 @Module({
     imports: [ConfigModule],
-    controllers: [WatchController]
+    providers: [WatchGateway]
 })
 export class WatchModule { }

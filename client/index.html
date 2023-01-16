@@ -1,63 +1,214 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            width: 100vw;
+            height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        main {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            align-items: center;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        main .inputs {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 90%;
+        }
+
+        main .inputs label {
+            display: flex;
+            flex-direction: column;
+            width: calc(50% - 0.25rem);
+        }
+
+        main .inputs label:first-child {
+            margin-right: 0.5rem;
+        }
+
+        main .inputs input {
+            padding: .5rem;
+            border-radius: .25rem;
+            border: 1px solid gray;
+        }
+
+        main .inputs label[for=textContent] {
+            margin: .25rem 0;
+            width: 100%;
+        }
+
+        main .inputs textarea {
+            width: 100%;
+            height: 150px;
+            padding: .5rem;
+            border-radius: .25rem;
+            border: 1px solid gray;
+            resize: none;
+        }
+
+        main .buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin: .25rem 0;
+            width: 90%;
+        }
+
+        main .buttons button {
+            display: block;
+            border-radius: .25rem;
+            border: 1px solid gray;
+            padding: 0.5rem;
+        }
+
+        main .output {
+            display: flex;
+            flex-direction: column;
+            width: 90%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        main .output li {
+            margin-bottom: 0.25rem;
+        }
+    </style>
 </head>
 
 <body>
-    <button>Send hello</button>
+    <main>
+        <div class="inputs">
+            <label for="inputPath">
+                Path
+                <input id="inputPath" type="text" value="go">
+            </label>
+            <label for="terminal">
+                Terminal
+                <input id="terminal" type="text" value="ls">
+            </label>
+            <label for="textContent">
+                File content
+                <textarea name="textContent" id="textContent"></textarea>
+            </label>
+        </div>
+        <div class="buttons">
+            <button id="createFolder">Create folder</button>
+            <button id="createFile">Create file</button>
+            <button id="readFolder">Read folder</button>
+            <button id="readFile">Read file</button>
+            <button id="updateFile">Update file</button>
+            <button id="runCommand">Run command</button>
+        </div>
+        <ul class="output"></ul>
+    </main>
     <script type="module">
         import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
+
         const socket = io('http://localhost:1234');
-        socket.on('connect', function () {
-            console.log('Connected');
-                        socket.emit('init');
-                        // socket.emit('crud-create-folder', {
-                        //     targetPath: "C:/Users/barsa/Documents/Coding/Learn/IDE\ -\ Proto/fileexp/ide-container/code/go"
-                        // });
-            //             socket.emit('crud-create-file', {
-            //                 targetPath: "/home/arkad/code/go/main.go"
-            //             });
-            //             socket.emit('crud-update-file', {
-            //                 targetPath: "/home/arkad/code/go/main.go",
-            //                 fileContent: `package main
+        const inputPath = document.getElementById("inputPath");
+        const terminal = document.getElementById("terminal");
+        const textContent = document.getElementById("textContent");
+        const btnCreateFolder = document.getElementById("createFolder");
+        const btnCreateFile = document.getElementById("createFile");
+        const btnUpdateFile = document.getElementById("updateFile");
+        const btnReadFile = document.getElementById("readFile");
+        const btnReadFolder = document.getElementById("readFolder");
+        const btnRunCommand = document.getElementById("runCommand");
+        const output = document.querySelector(".output");
 
-            // import "fmt"
+        btnCreateFolder.addEventListener('click', (e) => createFolder());
+        btnCreateFile.addEventListener('click', (e) => createFile());
+        btnUpdateFile.addEventListener('click', (e) => updateFile());
+        btnReadFile.addEventListener('click', (e) => readFile());
+        btnReadFolder.addEventListener('click', (e) => readFolder());
+        btnRunCommand.addEventListener('click', (e) => inputTerminal());
 
-            // func main() {
-            // 	fmt.Println("Hello World!")
-            // }
-            // `
-            //             });
-                        // socket.emit('crud-read-file', {
-                        //     targetPath: "/home/arkad/code/go/main.go"
-                        // });
-
-            socket.emit('watch-start');
-            socket.emit('terminal-input', 'ls');
-
-            socket.emit('terminal');
-            socket.on('terminal-data', function (data) {
-                console.log('terminal-data', data);
+        function createFolder() {
+            const path = "/home/arkad/code/" + inputPath.value;
+            socket.emit('crud-create-folder', {
+                targetPath: path
             });
+        }
 
-            socket.on('read-file', function (data) {
-                console.log('file content', data);
+        function createFile() {
+            const path = "/home/arkad/code/" + inputPath.value;
+            socket.emit('crud-create-file', {
+                targetPath: path
             });
+        }
 
-            socket.on('read-folder', function (data) {
-                console.log('folder content', data);
+        function readFile() {
+            const path = "/home/arkad/code/" + inputPath.value;
+            socket.emit('crud-read-file', {
+                targetPath: path
             });
-        });
+        }
 
-        const eventSource = new EventSource('http://127.0.0.1:1234/api/watch');
-        console.log(eventSource);
-        eventSource.onmessage = ({ data }) => {
+        function readFolder() {
+            const path = "/home/arkad/code/" + inputPath.value;
+            socket.emit('crud-read-folder', {
+                targetPath: path
+            });
+        }
+
+        function updateFile() {
+            const path = "/home/arkad/code/" + inputPath.value;
+            const text = "/home/arkad/code/" + textContent.value;
+            socket.emit('crud-update-file', {
+                targetPath: path,
+                fileContent: text
+            });
+        }
+
+        function inputTerminal() {
+            const command = terminal.value;
+            socket.emit('terminal-input', command);
+        }
+
+        function handleWatch(event, data) {
             console.log(data);
             const message = document.createElement('li');
-            message.innerText = 'New message: ' + JSON.stringify(data);
-            document.body.appendChild(message);
+            message.innerText = event + ' > ' + JSON.stringify(data);
+            output.appendChild(message);
         }
+
+        socket.on('connect', function () {
+            console.log('Connected');
+
+            socket.emit('init');
+            socket.emit('watch-start');
+            socket.emit('terminal');
+            socket.emit('watch');
+
+            socket.on('terminal-data', (data) => handleWatch('terminal-data', data));
+            socket.on('add', (data) => handleWatch('add', data));
+            socket.on('addDir', (data) => handleWatch('addDir', data));
+            socket.on('change', (data) => handleWatch('change', data));
+            socket.on('unlink', (data) => handleWatch('unlink', data));
+            socket.on('unlinkDir', (data) => handleWatch('unlinkDir', data));
+            socket.on('read-file', (data) => handleWatch('read-file', data));
+            socket.on('read-folder', (data) => handleWatch('read-folder', data));
+        });
     </script>
 </body>
 

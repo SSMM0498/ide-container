@@ -7,7 +7,7 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { CRUDService } from './crud.service';
-import { CreateFileEventType, CreateFolderEventType, DeleteEventType, DirectoryTreeType, MoveEventType, ReadFileEventType, ReadFolderEventType, UpdateFileEventType } from './types';
+import { CreateFileEventType, CreateFolderEventType, DeleteEventType, MoveEventType, ReadFileEventType, ReadFileResponse, ReadFolderEventType, ReadFolderResponse, UpdateFileEventType } from './types';
 
 @WebSocketGateway({
     cors: {
@@ -50,22 +50,28 @@ export class CRUDGateway {
     }
 
     @SubscribeMessage('crud-read-folder')
-    async onReadFolder(@MessageBody() eventData: ReadFolderEventType): Promise<WsResponse<DirectoryTreeType>> {
+    async onReadFolder(@MessageBody() eventData: ReadFolderEventType): Promise<WsResponse<ReadFolderResponse>> {
         console.log('READ FOLDER - CRUD DATA : ' + eventData);
         const tree = this.crudService.readFolder(eventData)
         return {
             event: 'read-folder',
-            data: tree
+            data: {
+                targetPath: eventData.targetPath,
+                folderContents: tree
+            }
         };
     }
 
     @SubscribeMessage('crud-read-file')
-    async onReadFile(@MessageBody() eventData: ReadFileEventType): Promise<WsResponse<string>> {
+    async onReadFile(@MessageBody() eventData: ReadFileEventType): Promise<WsResponse<ReadFileResponse>> {
         console.log('READ FILE - CRUD DATA : ' + eventData);
         const content = this.crudService.readFile(eventData)
         return {
             event: 'read-file',
-            data: content
+            data: {
+                targetPath: eventData.targetPath,
+                fileContent: content
+            }
         };
     }
 

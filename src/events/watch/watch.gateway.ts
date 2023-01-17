@@ -4,13 +4,6 @@ import { interval, map, Observable, Observer } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { SubscribeMessage, WebSocketGateway, WsResponse } from '@nestjs/websockets';
 
-interface MessageEvent {
-    data: string | object;
-    id?: string;
-    type?: string;
-    retry?: number;
-}
-
 @WebSocketGateway({
     cors: {
         origin: '*',

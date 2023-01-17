@@ -30,3 +30,13 @@ export class UpdateFileEventType extends BaseCrudEventType {
     @IsString()
     fileContent: string
 }
+
+export type ReadFolderResponse = {
+    targetPath: string
+    folderContents: DirectoryTreeType
+}
+
+export type ReadFileResponse = {
+    targetPath: string
+    fileContent: string
+}

@@ -4,6 +4,6 @@ __generated__
 build
 client
 dist
-code
+# code
 scripts
 test

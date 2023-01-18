@@ -22,6 +22,7 @@ export class CRUDHandler {
         const tree = directoryTree(folderPath, { attributes: ["type"] });
         return (tree?.children || [])?.map(({ type, path, name }) => ({ type, path, name }))
     }
+
     createFolder(folderPath: string) {
         const child = spawnChildProcess("mkdir", [folderPath]);
         this.onProcessOver(child);

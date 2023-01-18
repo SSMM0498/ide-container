@@ -41,7 +41,7 @@ RUN adduser arkad
 # Store uid and gid of created user to use while creating pty
 RUN id -u arkad > /home/arkad/.uid
 RUN id -g arkad > /home/arkad/.gid
-RUN mkdir code
+# RUN mkdir code
 
 # Use chokidar polling to avoid reaching the system limits for file watchers
 ENV CHOKIDAR_USEPOLLING=1

@@ -33,13 +33,10 @@ export class WatchGateway {
     startWatching(): Observable<WsResponse<string>> {
         return new Observable((observer: Observer<WsResponse<string>>) => {
             console.log("START WATCHING FROM HANDLER");
-
-            ['add', 'addDir', 'change', 'unlink', 'unlinkDir'].forEach((event: "add" | "addDir" | "change" | "unlink" | "unlinkDir") => {
-                this.watcher.on(event, (path) => setTimeout(() => {
-                    console.log("TRIGGER ", event, " ", path);
-                    observer.next({ event: event as string, data: path })
-                }, 0));
-            });
+            this.watcher.on('all', (event, path) => setTimeout(() => {
+                console.log("TRIGGER ", event, " ", path);
+                observer.next({ event: event as string, data: path })
+            }, 0));
         });
     }
 

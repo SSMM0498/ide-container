@@ -30,6 +30,7 @@ COPY . /home/arkad
 RUN npm run build
 
 # Set Env Variables
+ARG EnvironmentVariable
 ENV COMMUNICATION_PORT=1234
 ENV PREVIEW_PORT_1=1337
 ENV PREVIEW_PORT_2=1338

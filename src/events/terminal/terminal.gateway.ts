@@ -56,16 +56,15 @@ export class TerminalGateway {
     @SubscribeMessage('terminal-input')
     async inputTerminal(@MessageBody() eventData: string) {
         console.log("START TERMINAL INPUT");
-        this.terminalProcess.write(eventData + EOL);
+        this.terminalProcess.write(eventData);
     }
 
     @SubscribeMessage('terminal-preview')
     async startPreview(@MessageBody() eventData: string) {
         try {
-            const configParser = new ConfigParser()
-            configParser.read(`${this.codeDirectory}/arkad.cfg`)
-
-            this.terminalProcess.write(`${configParser.get("Preview", "startPreviewCommand") || ""}${EOL}`)
+            const configParser = new ConfigParser();
+            configParser.read(`${this.codeDirectory}/arkad.cfg`);
+            this.terminalProcess.write(`${configParser.get("Preview", "startPreviewCommand") || ""}${EOL}`);
         } catch (error) {
             console.log(error)
         }
@@ -90,7 +89,7 @@ export class TerminalGateway {
             this.terminalProcess.onData(data => {
                 console.log("START TERMINAL DATA");
                 observer.next({ event: 'terminal-data', data })
-            })
+            });
         });
     }
 }

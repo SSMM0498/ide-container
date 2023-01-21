@@ -16,18 +16,20 @@ RUN apt-get install -y nodejs
 RUN npm install -g live-server yarn
 
 # Copy package.json and its lockfile to /home/arkad
-COPY package.json package-lock.json /home/arkad/
+COPY package.json package-lock.json /home/arkad//
 
-WORKDIR /home/arkad
+WORKDIR /home/arkad/
 
 # Install Dependencies
 RUN npm install
 
 # Copy source code to /home/arkad
-COPY . /home/arkad
+COPY . /home/arkad/
 
 # Compile Typescript to Javascript
 RUN npm run build
+RUN ls -la
+RUN rm -rf ./src ./Dockerfile ./tsconfig.build.json ./tsconfig.json ./nest-cli.json
 
 # Set Env Variables
 ARG EnvironmentVariable
@@ -48,4 +50,4 @@ RUN id -g arkad > /home/arkad/.gid
 ENV CHOKIDAR_USEPOLLING=1
 
 # Start server
-CMD npm start
+CMD npm run start:prod

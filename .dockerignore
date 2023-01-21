@@ -7,3 +7,10 @@ dist
 # code
 scripts
 test
+task.todo
+.editorconfig
+.eslintrc.js
+.gitignore
+.prettierrc
+README.md
+test

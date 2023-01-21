@@ -4,6 +4,15 @@ import { interval, map, Observable, Observer } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { SubscribeMessage, WebSocketGateway, WsResponse } from '@nestjs/websockets';
 
+export function debounce<T extends Function>(cb: T, wait = 1000) {
+    let h: NodeJS.Timeout | null = null;
+    let callable = (...args: any) => {
+        clearTimeout(h as NodeJS.Timeout);
+        h = setTimeout(() => cb(...args), wait);
+    };
+    return <T>(<any>callable);
+}
+
 @WebSocketGateway({
     cors: {
         origin: '*',
@@ -20,6 +29,7 @@ export class WatchGateway {
             codeDirectory, {
             ignoreInitial: true,
             ignored: this.isMatchWithAnIgnoredDirectory(),
+            usePolling: false,
         });
         this.watcher.on('ready', () => {
             console.log("I am ready to watch files");
@@ -33,10 +43,10 @@ export class WatchGateway {
     startWatching(): Observable<WsResponse<string>> {
         return new Observable((observer: Observer<WsResponse<string>>) => {
             console.log("START WATCHING FROM HANDLER");
-            this.watcher.on('all', (event, path) => setTimeout(() => {
+            this.watcher.on('all', debounce((event, path) => {
                 console.log("TRIGGER ", event, " ", path);
                 observer.next({ event: event as string, data: path })
-            }, 0));
+            }));
         });
     }
 

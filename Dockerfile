@@ -16,7 +16,7 @@ RUN apt-get install -y nodejs
 RUN npm install -g live-server yarn
 
 # Copy package.json and its lockfile to /home/arkad
-COPY package.json package-lock.json /home/arkad//
+COPY package.json package-lock.json /home/arkad/
 
 WORKDIR /home/arkad/
 
@@ -44,7 +44,9 @@ RUN adduser arkad
 # Store uid and gid of created user to use while creating pty
 RUN id -u arkad > /home/arkad/.uid
 RUN id -g arkad > /home/arkad/.gid
-# RUN mkdir code
+
+# GIVE PERMISSION TO ARKAD USE
+RUN chown -R arkad /home/arkad/code/
 
 # Use chokidar polling to avoid reaching the system limits for file watchers
 ENV CHOKIDAR_USEPOLLING=1

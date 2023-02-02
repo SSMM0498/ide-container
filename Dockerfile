@@ -22,6 +22,7 @@ WORKDIR /home/arkad/
 
 # Install Dependencies
 RUN npm install
+RUN npm install -g live-server
 
 # Copy source code to /home/arkad
 COPY . /home/arkad/

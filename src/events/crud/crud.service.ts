@@ -17,12 +17,12 @@ export class CRUDService {
     }
 
     checkIsPathLegal(path: string): boolean {
-        return path.startsWith(this.codeDirectory) && !path.includes("../") && !path.includes("/root")
+        return path.startsWith(this.codeDirectory) && !path.includes("../") && !path.includes("/root");
     }
 
     deleteResource(eventData: DeleteEventType) {
         if (this.checkIsPathLegal(eventData.targetPath)) {
-            const resourcePath = eventData.targetPath.substring(this.userDirectory.length);
+            const resourcePath = eventData.targetPath;
             this.crudHandler.deleteResource(resourcePath);
         } else {
             //  TODO: Handle correctly this error
@@ -32,8 +32,8 @@ export class CRUDService {
 
     moveResource(eventData: MoveEventType) {
         if (this.checkIsPathLegal(eventData.targetPath)) {
-            const oldPath = eventData.targetPath.substring(this.userDirectory.length);
-            const newPath = eventData.newPath.substring(this.userDirectory.length);
+            const oldPath = eventData.targetPath;
+            const newPath = eventData.newPath;
             this.crudHandler.moveResource(oldPath, newPath);
         } else {
             //  TODO: Handle correctly this error
@@ -43,7 +43,7 @@ export class CRUDService {
 
     createFolder(eventData: CreateFolderEventType) {
         if (this.checkIsPathLegal(eventData.targetPath)) {
-            const folderPath = eventData.targetPath.substring(this.userDirectory.length);
+            const folderPath = eventData.targetPath;
             this.crudHandler.createFolder(folderPath);
         } else {
             //  TODO: Handle correctly this error
@@ -53,7 +53,7 @@ export class CRUDService {
 
     createFile(eventData: CreateFileEventType) {
         if (this.checkIsPathLegal(eventData.targetPath)) {
-            const filePath = eventData.targetPath.substring(this.userDirectory.length);
+            const filePath = eventData.targetPath;
             this.crudHandler.createFile(filePath);
         } else {
             //  TODO: Handle correctly this error
@@ -63,7 +63,7 @@ export class CRUDService {
 
     readFolder(eventData: ReadFolderEventType): DirectoryTreeType {
         if (this.checkIsPathLegal(eventData.targetPath)) {
-            const folderPath = eventData.targetPath.substring(this.userDirectory.length);
+            const folderPath = eventData.targetPath;
             const tree = this.crudHandler.readFolder(folderPath);
             return tree
         } else {
@@ -74,7 +74,7 @@ export class CRUDService {
 
     readFile(eventData: ReadFileEventType): string {
         if (this.checkIsPathLegal(eventData.targetPath)) {
-            const filePath = eventData.targetPath.substring(this.userDirectory.length);
+            const filePath = eventData.targetPath;
             const content = this.crudHandler.readFile(filePath);
             return content
         } else {
@@ -85,7 +85,7 @@ export class CRUDService {
 
     updateFile(eventData: UpdateFileEventType) {
         if (this.checkIsPathLegal(eventData.targetPath)) {
-            const filePath = eventData.targetPath.substring(this.userDirectory.length);
+            const filePath = eventData.targetPath;
             this.crudHandler.updateFile(filePath, eventData.fileContent);
         } else {
             //  TODO: Handle correctly this error

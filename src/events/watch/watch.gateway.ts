@@ -1,6 +1,5 @@
-import { Controller, Get, Sse } from '@nestjs/common';
 import { FSWatcher, watch as chokidarWatch } from "chokidar"
-import { interval, map, Observable, Observer } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { SubscribeMessage, WebSocketGateway, WsResponse } from '@nestjs/websockets';
 

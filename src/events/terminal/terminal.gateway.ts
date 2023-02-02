@@ -19,16 +19,18 @@ export class TerminalGateway {
     private hostname: string;
     private codeDirectory: string;
     private userDirectory: string;
+    private configParser: ConfigParser;
 
     constructor(private configService: ConfigService) {
+        // this.configParser = new ConfigParser();
         this.hostname = this.configService.get('HOSTNAME');
         this.codeDirectory = this.configService.get('CODE_DIRECTORY');
         this.userDirectory = this.configService.get('USER_DIRECTORY');
         this.terminalProcess = spawnNodePty("bash", [], {
             name: "xterm-color",
             cwd: this.codeDirectory,
-            uid: existsSync(`/home/arkad/.uid`) ? parseInt(readFileSync("/home/arkad/.uid", "utf-8")) : parseInt(execSync(`id -u`).toString()),
-            gid: existsSync(`/home/arkad/.gid`) ? parseInt(readFileSync("/home/arkad/.gid", "utf-8")) : parseInt(execSync(`id -g`).toString()),
+            uid: existsSync(`${this.codeDirectory}.uid`) ? parseInt(readFileSync(`${this.codeDirectory}.uid`, "utf-8")) : parseInt(execSync(`id -u`).toString()),
+            gid: existsSync(`${this.codeDirectory}.gid`) ? parseInt(readFileSync(`${this.codeDirectory}.gid`, "utf-8")) : parseInt(execSync(`id -g`).toString()),
             env: {
                 CommunicationPort: this.configService.get('COMMUNICATION_PORT'),
                 PreviewPort: this.configService.get('PREVIEW_PORT_1'),
@@ -58,33 +60,41 @@ export class TerminalGateway {
         console.log("START TERMINAL INPUT");
         this.terminalProcess.write(eventData);
     }
-
+    
     @SubscribeMessage('terminal-preview')
-    async startPreview(@MessageBody() eventData: string) {
+    async startPreview() {
         try {
-            const configParser = new ConfigParser();
-            configParser.read(`${this.codeDirectory}/arkad.cfg`);
-            this.terminalProcess.write(`${configParser.get("Preview", "startPreviewCommand") || ""}${EOL}`);
+            // console.log(`${this.codeDirectory}/arkad.cfg`);
+            this.terminalProcess.write(`clear${EOL}`);
+            this.terminalProcess.write(`live-server --port=1337 ${this.codeDirectory}/html/${EOL}`);
+            // this.configParser.read(`${this.codeDirectory}/arkad.cfg`);
+            // this.terminalProcess.write(`${this.configParser.get("Preview", "startPreviewCommand") || ""}${EOL}`);
         } catch (error) {
             console.log(error)
         }
     }
 
     @SubscribeMessage('terminal')
-    initConnexion(@ConnectedSocket() client: Socket): Observable<WsResponse<string>> {
+    initConnexion(): Observable<WsResponse<string>> {
         console.log("START TERMINAL");
+
         return new Observable((observer: Observer<WsResponse<string>>) => {
             console.log("START TERMINAL OBSERVABLE");
 
-            client.emit('terminal-data', {
-                data: `${bright}${red}${arkadLogo}${reset}${EOL}`,
+            observer.next({
+                event: 'terminal-data',
+                data: `${bright}${blue}${arkadLogo}${reset}${EOL}`,
             });
 
-            client.emit('terminal-data', {
-                data: `${BgWhite}${bright}${red}Connected! Welcome to arkad!${reset}${EOL}${EOL}`
+            observer.next({
+                event: 'terminal-data',
+                data: `${BgWhite}${bright}${blue}Connected! Welcome to arkad!${reset}${EOL}${EOL}`
             });
 
-            client.emit('terminal-data', { data: `${bright}${green}arkad@${this.hostname.split(".")[0]}${reset}:${bright}${blue}~/code${reset}$ ` });
+            observer.next({
+                event: 'terminal-data',
+                data: `${bright}${green}arkad@${this.hostname.split(".")[0]}${reset}:${bright}${blue}~/code${reset}$ `
+            });
 
             this.terminalProcess.onData(data => {
                 console.log("START TERMINAL DATA");

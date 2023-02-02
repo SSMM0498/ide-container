@@ -27,31 +27,31 @@ export class CRUDGateway {
 
     @SubscribeMessage('crud-delete-resource')
     async onDeleteResource(@MessageBody() eventData: DeleteEventType) {
-        console.log('DELETE RESOURCE - CRUD DATA : ' + eventData);
+        console.log('DELETE RESOURCE - CRUD DATA : ' + eventData.targetPath);
         this.crudService.deleteResource(eventData);
     }
 
     @SubscribeMessage('crud-move-resource')
     async onMoveResource(@MessageBody() eventData: MoveEventType) {
-        console.log('MOVE RESOURCE - CRUD DATA : ' + eventData);
+        console.log('MOVE RESOURCE - CRUD DATA : ' + eventData.targetPath);
         this.crudService.moveResource(eventData);
     }
 
     @SubscribeMessage('crud-create-folder')
     async onCreateFolder(@MessageBody() eventData: CreateFolderEventType) {
-        console.log('CREATE FOLDER - CRUD DATA : ' + eventData);
+        console.log('CREATE FOLDER - CRUD DATA : ' + eventData.targetPath);
         this.crudService.createFolder(eventData);
     }
 
     @SubscribeMessage('crud-create-file')
     async onCreateFile(@MessageBody() eventData: CreateFileEventType) {
-        console.log('CREATE FILE - CRUD DATA : ' + eventData);
+        console.log('CREATE FILE - CRUD DATA : ' + eventData.targetPath);
         this.crudService.createFile(eventData);
     }
 
     @SubscribeMessage('crud-read-folder')
     async onReadFolder(@MessageBody() eventData: ReadFolderEventType): Promise<WsResponse<ReadFolderResponse>> {
-        console.log('READ FOLDER - CRUD DATA : ' + eventData);
+        console.log('READ FOLDER - CRUD DATA : ' + eventData.targetPath);
         const tree = this.crudService.readFolder(eventData)
         return {
             event: 'read-folder',
@@ -64,7 +64,7 @@ export class CRUDGateway {
 
     @SubscribeMessage('crud-read-file')
     async onReadFile(@MessageBody() eventData: ReadFileEventType): Promise<WsResponse<ReadFileResponse>> {
-        console.log('READ FILE - CRUD DATA : ' + eventData);
+        console.log('READ FILE - CRUD DATA : ' + eventData.targetPath);
         const content = this.crudService.readFile(eventData)
         return {
             event: 'read-file',
@@ -77,7 +77,7 @@ export class CRUDGateway {
 
     @SubscribeMessage('crud-update-file')
     async onUpdateFile(@MessageBody() eventData: UpdateFileEventType) {
-        console.log('UPDATE FILE - CRUD DATA : ' + eventData);
+        console.log('UPDATE FILE - CRUD DATA : ' + eventData.targetPath);
         this.crudService.updateFile(eventData)
     }
 }

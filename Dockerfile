@@ -48,6 +48,7 @@ RUN id -g arkad > /home/arkad/.gid
 
 # GIVE PERMISSION TO ARKAD USE
 RUN chown -R arkad /home/arkad/code/
+USER arkad
 
 # Use chokidar polling to avoid reaching the system limits for file watchers
 ENV CHOKIDAR_USEPOLLING=1

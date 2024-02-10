@@ -1,5 +1,5 @@
 package piscine
 
-func sayHello() {
-	return "Hello World";
+func SayHello() string {
+	return "Hello Serigne Saliou Mbacké Mbaye";
 }

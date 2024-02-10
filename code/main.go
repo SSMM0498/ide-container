@@ -1,8 +1,8 @@
 package main
 
 import "fmt"
-import "piscine"
+import "main/piscine"
 
 func main() {
-    fmt.Println(piscine.sayHello())
+    fmt.Println(piscine.SayHello())
 }

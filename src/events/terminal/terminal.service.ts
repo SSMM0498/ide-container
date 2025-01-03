@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TerminalService {
-  public terminalProcess: IPty;
+  private terminals: Map<string, IPty> = new Map();
   public hostname: string;
   private codeDirectory: string;
   private userDirectory: string;
@@ -16,7 +16,10 @@ export class TerminalService {
     this.hostname = this.configService.get('HOSTNAME');
     this.codeDirectory = this.configService.get('CODE_DIRECTORY');
     this.userDirectory = this.configService.get('USER_DIRECTORY');
-    this.terminalProcess = spawnNodePty('bash', [], {
+  }
+
+  createTerminal(id: string): IPty {
+    const terminalProcess = spawnNodePty('bash', [], {
       name: 'xterm-color',
       cwd: this.codeDirectory,
       uid: existsSync(`${this.codeDirectory}.uid`) ? parseInt(readFileSync(`${this.codeDirectory}.uid`, 'utf-8')) : parseInt(execSync(`id -u`).toString()),
@@ -39,6 +42,20 @@ export class TerminalService {
         LS_COLORS: this.configService.get('LS_COLORS'),
       },
     });
-    this.terminalProcess.write(`clear${EOL}`);
+    terminalProcess.write(`clear${EOL}`);
+    this.terminals.set(id, terminalProcess);
+    return terminalProcess;
+  }
+
+  getTerminal(id: string): IPty {
+    return this.terminals.get(id);
+  }
+
+  closeTerminal(id: string): void {
+    const terminal = this.terminals.get(id);
+    if (terminal) {
+      terminal.kill();
+      this.terminals.delete(id);
+    }
   }
 }

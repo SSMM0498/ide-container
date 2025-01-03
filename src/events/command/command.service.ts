@@ -15,16 +15,16 @@ export class CommandService {
     this.config = yaml.parse(configContent);
   }
 
-  async runCommand() {
+  async runCommand(terminalId: string) {
     this.loadConfig();
     const cmd = this.config['CMD']['run'];
-    return this.executeCommand(cmd);
+    return this.executeCommand(terminalId, cmd);
   }
 
-  async previewCommand() {
+  async previewCommand(terminalId: string) {
     this.loadConfig();
     const cmd = this.config['CMD']['preview'];
-    return this.executeCommand(cmd);
+    return this.executeCommand(terminalId, cmd);
   }
 
   getPreviewUrl() {
@@ -32,12 +32,17 @@ export class CommandService {
     return this.config['URL']['preview'] || 'http://localhost:1337/';
   }
 
-  private async executeCommand(cmd: string): Promise<string> {
+  private async executeCommand(terminalId: string, cmd: string): Promise<string> {
     console.log(`🚀 EXECUTING COMMAND: ${cmd}`);
     return new Promise((resolve, reject) => {
       try {
-        this.terminalService.terminalProcess.write(`${cmd}\n`);
-        resolve(`Command executed: ${cmd}`);
+        const terminal = this.terminalService.getTerminal(terminalId);
+        if (terminal) {
+          terminal.write(`${cmd}\n`);
+          resolve(`Command executed: ${cmd}`);
+        } else {
+          reject(`Terminal not found: ${terminalId}`);
+        }
       } catch (error) {
         reject(`Error executing command: ${error.message}`);
       }

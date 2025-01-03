@@ -14,18 +14,20 @@ export class CommandGateway {
   server: Server;
 
   @SubscribeMessage('command-run')
-  async handleRunCommand(@MessageBody() command: string) {
-    const result = await this.commandService.runCommand();
+  async handleRunCommand(@MessageBody() { terminalId }: { terminalId: string }) {
+    const result = await this.commandService.runCommand(terminalId);
     return { event: 'command-result', data: result };
   }
 
   @SubscribeMessage('command-preview')
-  async handlePreviewCommand(@MessageBody() command: string) {
-    const result = await this.commandService.previewCommand();
-    if (result.startsWith('Command executed: ')) {
+  async handlePreviewCommand(@MessageBody() { terminalId }: { terminalId: string }) {
+    const result = await this.commandService.previewCommand(terminalId);
+
+    if (result.startsWith('Command executed:')) {
       const previewUrl = this.commandService.getPreviewUrl();
       return { event: 'command-result-preview', data: previewUrl };
     }
+
     return { event: 'command-result-preview', data: result };
   }
 }

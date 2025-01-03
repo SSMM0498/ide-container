@@ -21,7 +21,7 @@ async function bootstrap() {
     await app.listen(process.env.PORT || port);
 
     // Log the application URL once it's running
-    console.log(`👟 Application is running on - COMMAND: ${await app.getUrl()}`);
+    console.log(`👟 Application is running on - TERMINAL : ${await app.getUrl()}`);
 }
 
 // Execute the bootstrap function

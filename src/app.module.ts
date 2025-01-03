@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CRUDModule } from './events/crud/crud.module';
 import { WatchModule } from './events/watch/watch.module';
-import { TermModule } from './events/terminal/terminal.module';
+import { TerminalModule } from './events/terminal/terminal.module';
+import { CommandModule } from './events/command/command.module';
 import { AppController } from './app.controller';
 
 @Module({
@@ -11,7 +12,8 @@ import { AppController } from './app.controller';
         // Import main app modules
         CRUDModule,
         WatchModule,
-        TermModule
+        TerminalModule,
+        CommandModule
     ],
     controllers: [AppController],
 })

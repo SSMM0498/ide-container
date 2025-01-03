@@ -1,0 +1,5 @@
+CMD:
+  preview: live-server ./html --port=1337
+  run: npm run start
+URL:
+  preview: 'http://localhost:1337/'

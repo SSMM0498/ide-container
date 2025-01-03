@@ -42,3 +42,4 @@ scripts/somefile.sh
 scripts/spawn_demo.js
 scripts/watch-folder.js
 .bash_history
+ide-container.code-workspace

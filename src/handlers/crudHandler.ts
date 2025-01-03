@@ -1,8 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { ChildProcessWithoutNullStreams, spawn as spawnChildProcess } from "child_process"
 import * as directoryTree from "directory-tree";
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync, createWriteStream } from "fs";
+import { writeFile } from "fs/promises";
 import { DirectoryTreeType } from "src/events/crud/types";
+import * as archiver from 'archiver';
+import { join, dirname } from 'path';
 
 @Injectable()
 export class CRUDHandler {
@@ -28,13 +31,45 @@ export class CRUDHandler {
         this.onProcessOver(child);
     }
 
-    createFile(filePath: string) {
+    async createFile(filePath: string, fileContent?: string | ArrayBuffer) {
         const child = spawnChildProcess("touch", [filePath]);
-        this.onProcessOver(child);
+        await new Promise((resolve) => {
+            child.on('exit', resolve);
+        });
+
+        if (fileContent !== undefined) {
+            await this.updateFile(filePath, fileContent);
+        }
     }
 
-    updateFile(filePath: string, fileContent: string) {
-        writeFileSync(filePath, fileContent)
+    async updateFile(filePath: string, fileContent: string | ArrayBuffer) {
+        if (fileContent instanceof ArrayBuffer) {
+            await writeFile(filePath, Buffer.from(fileContent));
+        } else {
+            writeFileSync(filePath, fileContent);
+        }
+    }
+
+    async compressFolder(folderPath: string): Promise<Buffer> {
+        const parentDir = dirname(folderPath);
+        const folderName = folderPath.split('/').pop();
+        const zipPath = join(parentDir, `${folderName}.zip`);
+        const output = createWriteStream(zipPath);
+        const archive = archiver('zip', { zlib: { level: 9 } });
+
+        return new Promise((resolve, reject) => {
+            output.on('close', () => {
+                const zipContent = readFileSync(zipPath);
+                // Clean up temp zip file
+                this.deleteResource(zipPath);
+                resolve(zipContent);
+            });
+
+            archive.on('error', (err) => reject(err));
+            archive.pipe(output);
+            archive.directory(folderPath, false);
+            archive.finalize();
+        });
     }
 
     private onProcessOver(child: ChildProcessWithoutNullStreams) {

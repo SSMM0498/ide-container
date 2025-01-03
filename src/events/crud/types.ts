@@ -13,7 +13,10 @@ export class BaseCrudEventType {
 
 export class CreateFolderEventType extends BaseCrudEventType { }
 
-export class CreateFileEventType extends BaseCrudEventType { }
+export class CreateFileEventType extends BaseCrudEventType {
+    @IsString()
+    fileContent?: string | ArrayBuffer;
+}
 
 export class ReadFolderEventType extends BaseCrudEventType { }
 
@@ -31,6 +34,8 @@ export class UpdateFileEventType extends BaseCrudEventType {
     fileContent: string
 }
 
+export class DownloadEventType extends BaseCrudEventType { }
+
 export type ReadFolderResponse = {
     targetPath: string
     folderContents: DirectoryTreeType
@@ -40,3 +45,5 @@ export type ReadFileResponse = {
     targetPath: string
     fileContent: string
 }
+
+export type DownloadResponse = Buffer;

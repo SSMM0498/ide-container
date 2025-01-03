@@ -32,9 +32,9 @@ export class TerminalGateway {
             uid: existsSync(`${this.codeDirectory}.uid`) ? parseInt(readFileSync(`${this.codeDirectory}.uid`, "utf-8")) : parseInt(execSync(`id -u`).toString()),
             gid: existsSync(`${this.codeDirectory}.gid`) ? parseInt(readFileSync(`${this.codeDirectory}.gid`, "utf-8")) : parseInt(execSync(`id -g`).toString()),
             env: {
-                CommunicationPort: this.configService.get('COMMUNICATION_PORT'),
-                PreviewPort: this.configService.get('PREVIEW_PORT_1'),
-                PreviewPort2: this.configService.get('PREVIEW_PORT_2'),
+                COMMUNICATION_PORT: this.configService.get('COMMUNICATION_PORT'),
+                PREVIEW_PORT_1: this.configService.get('PREVIEW_PORT_1'),
+                PREVIEW_PORT_2: this.configService.get('PREVIEW_PORT_2'),
                 HOSTNAME: this.configService.get('HOSTNAME'),
                 SHELL: `/bin/bash`,
                 PWD: this.userDirectory,
@@ -57,13 +57,14 @@ export class TerminalGateway {
 
     @SubscribeMessage('terminal-input')
     async inputTerminal(@MessageBody() eventData: string) {
-        console.log("START TERMINAL INPUT");
+        console.log("⌨️ START TERMINAL INPUT");
         this.terminalProcess.write(eventData);
     }
-    
+
     @SubscribeMessage('terminal-preview')
     async startPreview() {
         try {
+            console.log("🧲 START PREVIEW");
             // console.log(`${this.codeDirectory}/arkad.cfg`);
             this.terminalProcess.write(`clear${EOL}`);
             this.terminalProcess.write(`live-server --port=1337 ${this.codeDirectory}/html/${EOL}`);
@@ -76,10 +77,10 @@ export class TerminalGateway {
 
     @SubscribeMessage('terminal')
     initConnexion(): Observable<WsResponse<string>> {
-        console.log("START TERMINAL");
+        console.log("🖥️ START TERMINAL");
 
         return new Observable((observer: Observer<WsResponse<string>>) => {
-            console.log("START TERMINAL OBSERVABLE");
+            console.log("👀 START TERMINAL OBSERVABLE");
 
             observer.next({
                 event: 'terminal-data',
@@ -97,7 +98,7 @@ export class TerminalGateway {
             });
 
             this.terminalProcess.onData(data => {
-                console.log("START TERMINAL DATA");
+                console.log("📥 START TERMINAL DATA");
                 observer.next({ event: 'terminal-data', data })
             });
         });

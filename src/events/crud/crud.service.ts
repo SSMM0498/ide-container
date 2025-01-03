@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CRUDHandler } from 'src/handlers/crudHandler';
-import { CreateFileEventType, CreateFolderEventType, DeleteEventType, DirectoryTreeType, MoveEventType, ReadFileEventType, ReadFolderEventType, UpdateFileEventType } from './types';
+import { CreateFileEventType, CreateFolderEventType, DeleteEventType, DirectoryTreeType, DownloadEventType, MoveEventType, ReadFileEventType, ReadFolderEventType, UpdateFileEventType } from './types';
 
 @Injectable()
 export class CRUDService {
@@ -54,7 +54,7 @@ export class CRUDService {
     createFile(eventData: CreateFileEventType) {
         if (this.checkIsPathLegal(eventData.targetPath)) {
             const filePath = eventData.targetPath;
-            this.crudHandler.createFile(filePath);
+            this.crudHandler.createFile(filePath, eventData.fileContent);
         } else {
             //  TODO: Handle correctly this error
             console.log('Error ressource not found');
@@ -90,6 +90,16 @@ export class CRUDService {
         } else {
             //  TODO: Handle correctly this error
             console.log('Error ressource not found');
+        }
+    }
+
+    async downloadWorkspace(eventData: DownloadEventType): Promise<Buffer> {
+        if (this.checkIsPathLegal(eventData.targetPath)) {
+            const folderPath = eventData.targetPath;
+            return await this.crudHandler.compressFolder(folderPath);
+        } else {
+            //  TODO: Handle correctly this error
+            console.log('Error resource not found');
         }
     }
 }

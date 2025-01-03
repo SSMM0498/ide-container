@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 @Module({
     imports: [
         ConfigModule.forRoot(),
+        // Import main app modules
         CRUDModule,
         WatchModule,
         TermModule

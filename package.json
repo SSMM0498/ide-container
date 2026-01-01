@@ -4,7 +4,7 @@
   "description": "",
   "author": "Serigne Saliou Mbacké Mbaye",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "main": "dist/main.js",
   "scripts": {
     "prebuild": "rimraf dist",
